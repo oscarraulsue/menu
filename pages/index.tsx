@@ -8,12 +8,15 @@ import {
   getDocs,
   doc,
 } from "@firebase/firestore";
-import { Button, Card, Checkbox, Grid, Input, Modal, Row,Text } from "@nextui-org/react";
-import React, { useState } from "react";
+import { Button, Card, Checkbox, Grid, Input, Modal, Row,Table,Text } from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
 import { fileUpload } from "../src/helpers/FileUpload";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { useForm } from "react-hook-form";
 import ImageCarga from "../src/components/ImageCarga";
+import { v4 as uuidv4 } from 'uuid';
+import { arrayBuffer } from "stream/consumers";
+
 const Home: NextPage = () => {
   const {
     register,
@@ -23,16 +26,24 @@ const Home: NextPage = () => {
     reset,
     formState: { errors },
   } = useForm();
+  const [dataBD, setDataBD] = React.useState<any>([]);
 
+  useEffect(() => {
+    dataBD.length < 1 && name();
+  }, [dataBD])
+  
   const name = async () => {
     const querySnapshot = await getDocs(collection(db, "productos"));
+    let arr:any[] = []
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
+      arr.push(doc.data());
+      console.log(doc.data())
     });
+    setDataBD(arr)
   };
+console.log(dataBD)
 
-  name();
   const [cont, setCont] = React.useState<any>([1]);
   const [contOptions, setContOptions] = React.useState<any>([1]);
 
@@ -59,12 +70,14 @@ const Home: NextPage = () => {
     console.log(ingredientes,options,imagen,imagenOptions,imagenIngredients);
 
     const newProducto = {
+      ID:uuidv4(),
       Nombre:data.Nombre,
       Descripcion:data.Descripcion,
       Precio: data.Precio,
-      DescuentoMax: data.descuentoMax,
-      Ingredientes: ingredientes,
-      Opciones: options
+      DescuentoMax: data.descuentoMax?data.descuentoMax:0,
+      Ingredientes: ingredientes?ingredientes:[],
+      Opciones: options? options: [],
+      Imagenes: imagen? imagen:[],
     }
     addDoc(collection(db,"productos"),newProducto)
     .then(resp => {
@@ -249,6 +262,31 @@ const Home: NextPage = () => {
         <Button type="submit" color="success" style={{ margin: "30px auto" }}>
           Enviar
         </Button>
+        <Table
+      aria-label="Example static collection table"
+      css={{
+        height: "auto",
+        minWidth: "100%",
+      }}
+      selectionMode="single"
+    >
+      <Table.Header>
+        <Table.Column>Proucto</Table.Column>
+        <Table.Column>Descripcion</Table.Column>
+        <Table.Column>precio</Table.Column>
+      </Table.Header>
+      <Table.Body>
+        {
+      dataBD.map((item: any, i: number) =>(
+        <Table.Row key={i}>
+          <Table.Cell>{item.Nombre}</Table.Cell>
+          <Table.Cell>{item.Descripcion}</Table.Cell>
+          <Table.Cell>{item.Precio}</Table.Cell>
+        </Table.Row>
+      ))
+}
+      </Table.Body>
+    </Table>
       </form>
       <Modal
         closeButton
@@ -270,6 +308,7 @@ const Home: NextPage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
     </div>
   );
 };

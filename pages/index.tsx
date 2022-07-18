@@ -30,7 +30,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     dataBD.length < 1 && name();
-  }, [dataBD])
+  }, [])
   
   const name = async () => {
     const querySnapshot = await getDocs(collection(db, "productos"));

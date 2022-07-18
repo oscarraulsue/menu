@@ -62,23 +62,23 @@ console.log(dataBD)
     let options: any[] = [];
 
     cont.map((i: number) => {
-      ingredientes.push({name: getValues(`ingredient${i}`), img:imagenIngredients.find((item:any) => item.itemKey === `ingredient${i}`)});
+      ingredientes.push({name: getValues(`ingredient${i}`), img:imagenIngredients.find((item:any) => item.itemKey === `ingredient${i}`)?imagenIngredients.find((item:any) => item.itemKey === `ingredient${i}`):''});
     });
     contOptions.map((i: number) => {
-      options.push({name: getValues(`options${i}`) , img:imagenOptions.find((item:any) => item.itemKey === `options${i}`)});
-    });
-    console.log(ingredientes,options,imagen,imagenOptions,imagenIngredients);
+      options.push({name: getValues(`options${i}`) , img:imagenOptions.find((item:any) => item.itemKey === `options${i}`)?imagenOptions.find((item:any) => item.itemKey === `options${i}`):''});
 
+    });
     const newProducto = {
       ID:uuidv4(),
       Nombre:data.Nombre,
       Descripcion:data.Descripcion,
       Precio: data.Precio,
       DescuentoMax: data.descuentoMax?data.descuentoMax:0,
-      Ingredientes: ingredientes?ingredientes:[],
-      Opciones: options? options: [],
-      Imagenes: imagen? imagen:[],
+      Ingredientes: ingredientes,
+      Opciones: options,
+      Imagenes: imagen,
     }
+    console.log(newProducto);
     addDoc(collection(db,"productos"),newProducto)
     .then(resp => {
       resetAll()

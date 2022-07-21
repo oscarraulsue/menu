@@ -53,7 +53,6 @@ console.log(dataBD)
   const [visible, setVisible] = React.useState(false);
   const closeHandler = () => {
     setVisible(false);
-    console.log("closed");
   };
 
   const onSubmit = (data: any) => {
@@ -71,6 +70,8 @@ console.log(dataBD)
     const newProducto = {
       ID:uuidv4(),
       Nombre:data.Nombre,
+      Tipo:data.tipo,
+      Categoria:data.Categoria,
       Descripcion:data.Descripcion,
       Precio: data.Precio,
       DescuentoMax: data.descuentoMax?data.descuentoMax:0,
@@ -110,6 +111,24 @@ console.log(dataBD)
               labelPlaceholder="Nombre"
               status="primary"
               {...register("Nombre")}
+            />
+          </Grid>
+          <Grid style={{ marginTop: "30px" }}>
+            <Input
+              width="300px"
+              shadow={false}
+              labelPlaceholder="Categoria"
+              status="primary"
+              {...register("Categoria")}
+            />
+          </Grid>
+          <Grid style={{ marginTop: "30px" }}>
+            <Input
+              width="300px"
+              shadow={false}
+              labelPlaceholder="Tipo"
+              status="primary"
+              {...register("Tipo")}
             />
           </Grid>
           <Grid style={{ marginTop: "30px" }}>

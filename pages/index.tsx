@@ -70,7 +70,7 @@ console.log(dataBD)
     const newProducto = {
       ID:uuidv4(),
       Nombre:data.Nombre,
-      Tipo:data.tipo,
+      Tipo:data.Tipo,
       Categoria:data.Categoria,
       Descripcion:data.Descripcion,
       Precio: data.Precio,
